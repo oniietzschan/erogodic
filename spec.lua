@@ -56,5 +56,102 @@ describe('Terebi:', function()
       assert.same(nil, script:next())
       assert.same(false, script:hasNext())
     end)
+
+    it('Looping should be possible', function()
+      local script = Ero(function()
+        Ero:env()
+
+        while true do
+          option "What does a wanko say?"
+          option "What does a nyanko say?"
+          option "I already know a ton about animal sounds."
+          menu "Make your selection, now."
+          if selection() == "What does a wanko say?" then
+            msg "Wan! Wan!"
+          elseif selection() == "What does a nyanko say?" then
+            msg "Nya! Nyan!"
+          elseif selection() == "I already know a ton about animal sounds." then
+            msg "Fine. Have a nice day."
+            break
+          end
+        end
+      end)
+
+      local assertMenuWasDisplayed = function()
+        assert.same({
+          msg = "Make your selection, now.",
+          options = {
+            "What does a wanko say?",
+            "What does a nyanko say?",
+            "I already know a ton about animal sounds.",
+          }
+        }, script:next())
+      end
+
+      assertMenuWasDisplayed()
+      assert.same({
+        msg = "Wan! Wan!",
+      }, script:select("What does a wanko say?"))
+      assertMenuWasDisplayed()
+      assert.same({
+        msg = "Nya! Nyan!",
+      }, script:select("What does a nyanko say?"))
+      assertMenuWasDisplayed()
+      assert.same({
+        msg = "Fine. Have a nice day.",
+      }, script:select("I already know a ton about animal sounds."))
+      assert.same(nil, script:next())
+    end)
+
+    it("Arbitrary lua scripting should be possible", function()
+      local player = {
+        hatted = false,
+      }
+      local script = Ero(function()
+        Ero:env()
+
+        ::redo::
+        if player.hatted == false then
+          option "Put on a dapper hat."
+        else
+          option "Say: \"I am the supreme gentleman.\""
+        end
+        option "Give the world it's retribution."
+        menu ""
+        if selection() == "Put on a dapper hat." then
+          player.hatted = true
+          msg "You put on a dapper hat. It fits perfectly and you look fucking brilliant."
+          goto redo
+        elseif selection() == "Say: \"I am the supreme gentleman.\"" then
+          msg "You assert your status as a conscious agent in the universe."
+        elseif selection() == "Give the world it's retribution." then
+          msg "What was seen can never be unseen, and I will never forget it, nor will I forgive it."
+        end
+      end)
+
+      assert.same(false, player.hatted)
+      assert.same({
+        msg = "",
+        options = {
+          "Put on a dapper hat.",
+          "Give the world it's retribution.",
+        }
+      }, script:next())
+      assert.same({
+        msg = "You put on a dapper hat. It fits perfectly and you look fucking brilliant.",
+      }, script:select("Put on a dapper hat."))
+      assert.same(true, player.hatted)
+      assert.same({
+        msg = "",
+        options = {
+          "Say: \"I am the supreme gentleman.\"",
+          "Give the world it's retribution.",
+        }
+      }, script:next())
+      assert.same({
+        msg = "You assert your status as a conscious agent in the universe.",
+      }, script:select("Say: \"I am the supreme gentleman.\""))
+      assert.same(nil, script:next())
+    end)
   end)
 end)

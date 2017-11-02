@@ -76,6 +76,7 @@ function Script:select(selection)
   for _, option in ipairs(self._host._options) do
     if option == selection then
       self._host._selection = selection
+      self._host._options = {}
       return self:next()
     end
   end
