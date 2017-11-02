@@ -35,12 +35,17 @@ local script = Ero(function()
 end)
 
 
-script:next() -- returns: {msg = "Hello minasan."}
-script:next() -- {msg = "Which of these frozen desserts is your favourite?"}
-script:next() -- {msg = "Choose one:",
-                  options = {"Soft Serve", "Shaved Ice"}}
-script:select("Shaved Ice") -- {msg = "Just right."}
-script:next() -- nil
+script:next()
+-- Returns: {msg = "Hello minasan."}
+script:next()
+-- Returns: {msg = "Which of these frozen desserts is your favourite?"}
+script:next()
+-- Returns: {msg = "Choose one:",
+--           options = {"Soft Serve", "Shaved Ice"}}
+script:select("Shaved Ice")
+-- Returns: {msg = "Just right."}
+script:next()
+-- Returns: nil
 ```
 
 ## Eventual Features
