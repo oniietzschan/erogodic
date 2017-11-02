@@ -13,6 +13,7 @@ describe('Terebi:', function()
     it('Should have expected output', function()
       local script = Ero(function()
         Ero:env()
+
         msg "Hello minasan."
         msg "Which of these frozen desserts is your favourite?"
 
