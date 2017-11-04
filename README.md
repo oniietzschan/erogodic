@@ -12,8 +12,6 @@ Note: I currently do not consider this library worth using. The syntax is too ve
 local Ero = require 'erogodic'()
 
 local script = Ero(function()
-  Ero:env()
-
   msg "Hello minasan."
   msg "Which of these frozen desserts is your favourite?"
 

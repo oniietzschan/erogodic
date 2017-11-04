@@ -12,8 +12,6 @@ describe('Terebi:', function()
   describe('When executing script', function()
     it('Should have expected output', function()
       local script = Ero(function()
-        Ero:env()
-
         msg "Hello minasan."
         msg "Which of these frozen desserts is your favourite?"
 
@@ -59,8 +57,6 @@ describe('Terebi:', function()
 
     it('Looping should be possible', function()
       local script = Ero(function()
-        Ero:env()
-
         while true do
           option "What does a wanko say?"
           option "What does a nyanko say?"
@@ -108,8 +104,6 @@ describe('Terebi:', function()
         hatted = false,
       }
       local script = Ero(function()
-        Ero:env()
-
         ::redo::
         if player.hatted == false then
           option "Put on a dapper hat."

@@ -34,7 +34,14 @@ function Erogodic:__call(...)
   return self:newScript(...)
 end
 
-function Erogodic:env()
+function Erogodic:newScript(scriptFn)
+  self:setEnv(scriptFn)
+
+  return setmetatable({}, ScriptMetaTable)
+    :initialize(self, scriptFn)
+end
+
+function Erogodic:setEnv(fn)
   self._options = {}
   self._selection = nil
 
@@ -58,12 +65,7 @@ function Erogodic:env()
     table.insert(self._options, option)
   end
   setmetatable(env, {__index = _G})
-  setfenv(2, env)
-end
-
-function Erogodic:newScript(...)
-  return setmetatable({}, ScriptMetaTable)
-    :initialize(self, ...)
+  setfenv(fn, env)
 end
 
 function Script:initialize(host, scriptFn)
