@@ -53,10 +53,10 @@ script:next()
 -- Returns: nil
 ```
 
-## Eventual Features
-* Traverse nodes with arbitrary content: text, portraits, animations, scripting, etc.
-* Control flow including: branching choices, loops, breakpoints.
-* Use outside variables and conditions to constrain or direct the script.
+## Eventual Features (???)
+* Less repetitive syntax. Probably via a custom language parser.
+* Add abritary node contents: text, portraits, animations, callbacks, etc.
+* Macros suitable for changing multiple attributes at once. ie. Setting the current speaking character.
 * Support for internationalization.
 * Command line script validation tool.
 
