@@ -34,51 +34,49 @@ function Erogodic:__call(...)
   return self:newScript(...)
 end
 
-function Erogodic:newScript(scriptFn)
-  self:setEnv(scriptFn)
-
+function Erogodic:newScript(...)
   return setmetatable({}, ScriptMetaTable)
-    :initialize(self, scriptFn)
+    :initialize(...)
 end
 
-function Erogodic:setEnv(fn)
-  self._options = {}
+function Script:initialize(scriptFn)
   self._selection = nil
-
-  local env = {}
-  function env.menu(text)
-    coroutine.yield({
-      msg = text,
-      options = self._options,
-    })
-  end
-  function env.msg(text)
-    coroutine.yield({msg = text})
-  end
-  env.selection = setmetatable({}, {
-    __call = function()
-      return self._selection
-    end,
-  })
-  function env.option(option, callbackFn)
-    assert(type(option) == 'string')
-    table.insert(self._options, option)
-  end
-  setmetatable(env, {__index = _G})
-  setfenv(fn, env)
-end
-
-function Script:initialize(host, scriptFn)
-  self._host = host
-  self._scriptCoroutine = coroutine.create(scriptFn)
+  self._options = {}
+  self:_setScriptCoroutine(scriptFn)
   return self
 end
 
+function Script:_setScriptCoroutine(scriptFn)
+  local env = {
+    menu = function(text)
+      coroutine.yield({
+        msg = text,
+        options = self._options,
+      })
+    end,
+    msg = function(text)
+      coroutine.yield({msg = text})
+    end,
+    selection = setmetatable({}, {
+      __call = function()
+        return self._selection
+      end,
+    }),
+    option = function(option, callbackFn)
+      assert(type(option) == 'string')
+      table.insert(self._options, option)
+    end,
+  }
+  setmetatable(env, {__index = _G})
+  setfenv(scriptFn, env)
+  self._scriptCoroutine = coroutine.create(scriptFn)
+end
+
 function Script:select(selection)
-  for _, option in ipairs(self._host._options) do
+  for _, option in ipairs(self._options) do
     if option == selection then
-      self._host._selection = selection
-      self._host._options = {}
+      self._selection = selection
+      self._options = {}
       return self:next()
     end
   end
