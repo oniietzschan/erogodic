@@ -166,5 +166,25 @@ describe('Terebi:', function()
       assert.same({msg = "What a good citizen you are!"}, script:select("Yes"))
       assert.same(nil, script:next())
     end)
+
+    it('"msg" should not block from proceeding when options are defined', function()
+      local script = Ero(function()
+        msg "You have two options..."
+        option "Yahweh"
+        msg "Yahweh."
+        option "Highway"
+        msg "Or the highway."
+        menu "Yeah! This time I'm a let it all come out!"
+      end)
+
+      assert.same({msg = "You have two options..."}, script:next())
+      assert.same({msg = "Yahweh."}, script:next())
+      assert.same({msg = "Or the highway."}, script:next())
+      assert.same({
+        msg = "Yeah! This time I'm a let it all come out!",
+        options = {"Yahweh", "Highway"}
+      }, script:next())
+      assert.same(nil, script:select("Yahweh"))
+    end)
   end)
 end)

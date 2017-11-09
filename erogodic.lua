@@ -42,6 +42,7 @@ end
 function Script:initialize(scriptFn)
   self._selection = nil
   self._options = {}
+  self._onMenu = false
   self:_setScriptCoroutine(scriptFn)
   return self
 end
@@ -49,6 +50,7 @@ end
 function Script:_setScriptCoroutine(scriptFn)
   local env = {
     menu = function(text)
+      self._onMenu = true
       coroutine.yield({
         msg = text,
         options = self._options,
@@ -77,6 +79,7 @@ function Script:select(selection)
     if option == selection then
       self._selection = selection
       self._options = {}
+      self._onMenu = false
       return self:next()
     end
   end
@@ -84,7 +87,7 @@ function Script:select(selection)
 end
 
 function Script:next()
-  if #self._options >= 1 then
+  if self._onMenu then
     return self._currentNode -- Can not skip a question.
   end
   local isRunning
