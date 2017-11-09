@@ -48,30 +48,36 @@ function Script:initialize(scriptFn)
 end
 
 function Script:_setScriptCoroutine(scriptFn)
-  local env = {
-    menu = function(text)
-      self._onMenu = true
-      coroutine.yield({
-        msg = text,
-        options = self._options,
-      })
+  local env = setmetatable({}, {__index = _G})
+  function env.menu(text)
+    self._onMenu = true
+    coroutine.yield({
+      msg = text,
+      options = self._options,
+    })
+  end
+  function env.msg(text)
+    coroutine.yield({msg = text})
+  end
+  env.selection = setmetatable({}, {
+    __call = function()
+      return self._selection
     end,
-    msg = function(text)
-      coroutine.yield({msg = text})
-    end,
-    selection = setmetatable({}, {
-      __call = function()
-        return self._selection
-      end,
-    }),
-    option = function(option, callbackFn)
-      assert(type(option) == 'string')
-      table.insert(self._options, option)
-    end,
-  }
-  setmetatable(env, {__index = _G})
-  setfenv(scriptFn, env)
+  })
+  function env.option(option, callbackFn)
+    assert(type(option) == 'string')
+    table.insert(self._options, option)
+  end
+  self._env = env
+  setfenv(scriptFn, self._env)
   self._scriptCoroutine = coroutine.create(scriptFn)
+end
+
+function Script:extendEnvironment(t)
+  for k, v in pairs(t) do
+    self._env[k] = v
+  end
+  return self
 end
 
 function Script:select(selection)
@@ -95,7 +101,7 @@ function Script:next()
   if isRunning == true then
     return self._currentNode
   else
-    error('Error executing script: ' .. result)
+    error('Error executing script: ' .. self._currentNode)
   end
 end
 

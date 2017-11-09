@@ -147,6 +147,14 @@ describe('Terebi:', function()
       }, script:select("Say: \"I am the supreme gentleman.\""))
       assert.same(nil, script:next())
     end)
+
+    it('Invalid scripts should relay error message', function()
+      local script = Ero(function()
+        msg(undefinedGlobal.undefinedKey)
+      end)
+      local expectedError = "Error executing script: spec.lua:153: attempt to index global 'undefinedGlobal' (a nil value)"
+      assert.has_error(function() script:next() end, expectedError)
+    end)
   end)
 
   describe('When prompted with a choice', function()
@@ -185,6 +193,18 @@ describe('Terebi:', function()
         options = {"Yahweh", "Highway"}
       }, script:next())
       assert.same(nil, script:select("Yahweh"))
+    end)
+  end)
+
+  describe('When calling Script functions', function()
+    it('Calling extendEnvironment() should add additional values to environment table', function()
+      local script = Ero(function()
+        local text = "I am going to marry " .. wifeName
+        msg(text)
+      end)
+        :extendEnvironment({wifeName = 'Toromi'})
+
+      assert.same({msg = "I am going to marry Toromi"}, script:next())
     end)
   end)
 end)
