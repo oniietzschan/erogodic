@@ -148,4 +148,23 @@ describe('Terebi:', function()
       assert.same(nil, script:next())
     end)
   end)
+
+  describe('When prompted with a choice', function()
+    it('It should not be possible to skip it', function()
+      local script = Ero(function()
+        option "Yes"
+        menu "Would you like to pay your taxes?"
+        if selection() == "Yes" then
+          msg "What a good citizen you are!"
+        end
+      end)
+
+      assert.same({msg = "Would you like to pay your taxes?", options = {"Yes"}}, script:next())
+      assert.same({msg = "Would you like to pay your taxes?", options = {"Yes"}}, script:next())
+      assert.same({msg = "Would you like to pay your taxes?", options = {"Yes"}}, script:next())
+      assert.same({msg = "Would you like to pay your taxes?", options = {"Yes"}}, script:next())
+      assert.same({msg = "What a good citizen you are!"}, script:select("Yes"))
+      assert.same(nil, script:next())
+    end)
+  end)
 end)

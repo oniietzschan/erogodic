@@ -84,9 +84,13 @@ function Script:select(selection)
 end
 
 function Script:next()
-  local isRunning, result = coroutine.resume(self._scriptCoroutine)
+  if #self._options >= 1 then
+    return self._currentNode -- Can not skip a question.
+  end
+  local isRunning
+  isRunning, self._currentNode = coroutine.resume(self._scriptCoroutine)
   if isRunning == true then
-    return result
+    return self._currentNode
   else
     error('Error executing script: ' .. result)
   end
