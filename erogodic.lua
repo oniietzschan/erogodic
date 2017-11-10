@@ -1,5 +1,5 @@
 local Erogodic = {
-  _VERSION     = 'erogodic v0.0.0',
+  _VERSION     = 'erogodic v0.1.0',
   _URL         = 'https://github.com/oniietzschan/erogodic',
   _DESCRIPTION = 'A library for scripting branching interactive narrative.',
   _LICENSE     = [[

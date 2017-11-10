@@ -117,9 +117,6 @@ describe('Terebi:', function()
           elseif selection() == "Say: \"I am the supreme gentleman.\"" then
             msg "You assert your status as a conscious agent in the universe."
             break
-          elseif selection() == "Give the world it's retribution." then
-            msg "What was seen can never be unseen, and I will never forget it, nor will I forgive it."
-            break
           end
         end
       end)
