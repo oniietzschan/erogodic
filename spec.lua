@@ -151,7 +151,18 @@ describe('Terebi:', function()
   end)
 
   describe('When prompted with a choice', function()
-    it('It should not be possible to skip it', function()
+    it('Should throw error when choosing invalid option', function()
+      local script = Ero(function()
+        option "Lemon Tea"
+        option "Milk Tea"
+        menu "Which is best?"
+      end)
+
+      assert.same({msg = "Which is best?", options = {"Lemon Tea", "Milk Tea"}}, script:next())
+      assert.has_error(function() script:select("Onion Tea") end, "selection 'Onion Tea' was not one of the options.")
+    end)
+
+    it('Should not be possible to skip it', function()
       local script = Ero(function()
         option "Yes"
         menu "Would you like to pay your taxes?"
