@@ -10,27 +10,26 @@ describe('Terebi:', function()
   end)
 
   describe('When executing script', function()
+    it('Invalid scripts should relay error message', function()
+      local script = Ero(function()
+        msg(undefinedGlobal.undefinedKey)
+      end)
+      local expectedError = "Error executing script: spec.lua:15: attempt to index global 'undefinedGlobal' (a nil value)"
+      assert.has_error(function() script:next() end, expectedError)
+    end)
+
     it('Should have expected output', function()
       local script = Ero(function()
         msg "Hello minasan."
         msg "Which of these frozen desserts is your favourite?"
-
         option "Soft Serve"
         option "Shaved Ice"
         menu "Choose one:"
         if selection() == "Soft Serve" then
-          goto softServe
+          msg "Too cold!!"
         elseif selection() == "Shaved Ice" then
-          goto shavedIce
+          msg "Just right."
         end
-
-        ::softServe::
-        msg "Too cold!!"
-        do return end
-
-        ::shavedIce::
-        msg "Just right."
-        do return end
       end)
 
       assert.same('table', type(script))
@@ -104,22 +103,24 @@ describe('Terebi:', function()
         hatted = false,
       }
       local script = Ero(function()
-        ::redo::
-        if player.hatted == false then
-          option "Put on a dapper hat."
-        else
-          option "Say: \"I am the supreme gentleman.\""
-        end
-        option "Give the world it's retribution."
-        menu ""
-        if selection() == "Put on a dapper hat." then
-          player.hatted = true
-          msg "You put on a dapper hat. It fits perfectly and you look fucking brilliant."
-          goto redo
-        elseif selection() == "Say: \"I am the supreme gentleman.\"" then
-          msg "You assert your status as a conscious agent in the universe."
-        elseif selection() == "Give the world it's retribution." then
-          msg "What was seen can never be unseen, and I will never forget it, nor will I forgive it."
+        while true do
+          if player.hatted == false then
+            option "Put on a dapper hat."
+          else
+            option "Say: \"I am the supreme gentleman.\""
+          end
+          option "Give the world it's retribution."
+          menu ""
+          if selection() == "Put on a dapper hat." then
+            player.hatted = true
+            msg "You put on a dapper hat. It fits perfectly and you look fucking brilliant."
+          elseif selection() == "Say: \"I am the supreme gentleman.\"" then
+            msg "You assert your status as a conscious agent in the universe."
+            break
+          elseif selection() == "Give the world it's retribution." then
+            msg "What was seen can never be unseen, and I will never forget it, nor will I forgive it."
+            break
+          end
         end
       end)
 
@@ -146,14 +147,6 @@ describe('Terebi:', function()
         msg = "You assert your status as a conscious agent in the universe.",
       }, script:select("Say: \"I am the supreme gentleman.\""))
       assert.same(nil, script:next())
-    end)
-
-    it('Invalid scripts should relay error message', function()
-      local script = Ero(function()
-        msg(undefinedGlobal.undefinedKey)
-      end)
-      local expectedError = "Error executing script: spec.lua:153: attempt to index global 'undefinedGlobal' (a nil value)"
-      assert.has_error(function() script:next() end, expectedError)
     end)
   end)
 
