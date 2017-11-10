@@ -18,37 +18,27 @@ Note: I currently do not consider this library to be ideal. The syntax is too ve
 local Ero = require 'erogodic'()
 
 local script = Ero(function()
-  msg "Hello minasan."
-  msg "Which of these frozen desserts is your favourite?"
-
+  msg "Hello minasan. Which of these frozen desserts is your favourite?"
   option "Soft Serve"
   option "Shaved Ice"
   menu "Choose one:"
   if selection() == "Soft Serve" then
-    goto softServe
+    msg "Too cold!!"
   elseif selection() == "Shaved Ice" then
-    goto shavedIce
+    msg "Just right."
   end
-
-  ::softServe::
-  msg "Too cold!!"
-  do return end
-
-  ::shavedIce::
-  msg "Just right."
-  do return end
+  msg "Thanks for stopping by!"
 end)
 
-
 script:next()
--- Returns: {msg = "Hello minasan."}
-script:next()
--- Returns: {msg = "Which of these frozen desserts is your favourite?"}
+-- Returns: {msg = "Hello minasan. Which of these frozen desserts is your favourite?"}
 script:next()
 -- Returns: {msg = "Choose one:",
 --           options = {"Soft Serve", "Shaved Ice"}}
 script:select("Shaved Ice")
 -- Returns: {msg = "Just right."}
+script:next()
+-- Returns: {msg = "Thanks for stopping by!"}
 script:next()
 -- Returns: nil
 ```
