@@ -197,6 +197,131 @@ describe('Terebi:', function()
     end)
   end)
 
+  describe('When setting node attributes', function()
+    it('Should be able to define and set arbitrary node attributes', function()
+      local script = Ero(function()
+        characterName "Steven"
+        msg "Get off your duff!"
+        effect "shake text"
+        msg "Check in with your body; how does it feel?"
+        characterName "Doug"
+        effect(nil)
+        msg "I'm a hunk, so I don't have to exercise."
+      end)
+        :defineAttributes({
+          'characterName',
+          'effect',
+          'unusedAttribute',
+        })
+
+      assert.same({
+        characterName = "Steven",
+        msg = "Get off your duff!",
+      }, script:next())
+      assert.same({
+        characterName = "Steven",
+        effect = "shake text",
+        msg = "Check in with your body; how does it feel?",
+      }, script:next())
+      assert.same({
+        characterName = "Doug",
+        msg = "I'm a hunk, so I don't have to exercise.",
+      }, script:next())
+    end)
+
+    it('should be able to set node attributes to any Lua value', function()
+      local func = function() return false end
+      local tbl = {path = "/assets/portrait.png", width = 64, height = 128}
+      local script = Ero(function()
+        attr(true)
+        msg "boolean"
+        attr(func)
+        msg "function"
+        attr(420.666)
+        msg "number"
+        attr "Puru puru purin"
+        msg "string"
+        attr(tbl)
+        msg "table"
+      end)
+        :defineAttributes({
+          'attr',
+        })
+
+      assert.same({
+        attr = true,
+        msg = "boolean",
+      }, script:next())
+      assert.same({
+        attr = func,
+        msg = "function",
+      }, script:next())
+      assert.same({
+        attr = 420.666,
+        msg = "number",
+      }, script:next())
+      assert.same({
+        attr = "Puru puru purin",
+        msg = "string",
+      }, script:next())
+      assert.same({
+        attr = tbl,
+        msg = "table",
+      }, script:next())
+    end)
+
+    it('should be able to use macros to create message node with multiple attribute values', function()
+      local script = Ero(function()
+
+        -- terse syntax
+        serval()
+        msg "Ohayou!"
+        kaban "Tabenai de kudasai!"
+        font "jokerman"
+        serval "Tabenai yo!"
+        -- verbose syntax
+        kaban()
+        msg "Ureshii naa!"
+      end)
+        :defineAttributes({
+          'font',
+          'name',
+          'image',
+        })
+        :addMacro('kaban', {
+          name = 'Kaban',
+          image = 'kaban.png',
+        })
+        :addMacro('serval', {
+          name = 'Serval, The Serval',
+          image = 'serval.png',
+        })
+
+      assert.same({
+        name = 'Serval, The Serval',
+        image = 'serval.png',
+        msg = 'Ohayou!',
+      }, script:next())
+      assert.same({
+        name = 'Kaban',
+        image = 'kaban.png',
+        msg = 'Tabenai de kudasai!',
+      }, script:next())
+      assert.same({
+        name = 'Serval, The Serval',
+        image = 'serval.png',
+        font = 'jokerman',
+        msg = 'Tabenai yo!',
+      }, script:next())
+      assert.same({
+        name = 'Kaban',
+        image = 'kaban.png',
+        font = 'jokerman',
+        msg = 'Ureshii naa!',
+      }, script:next())
+    end)
+  end)
+
   describe('When calling Script functions', function()
     it('Calling extendEnvironment() should add additional values to environment table', function()
       local script = Ero(function()

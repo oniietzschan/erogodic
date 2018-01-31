@@ -12,7 +12,7 @@ Right now Lua 5.1, Luajit 2.0, and Luajit 2.1 are supported.
 
 I currently do not consider this library to be ideal. The syntax is too verbose, particularily around the menu functionality. I will probably rewrite Erogodic as a custom scripting language at a future time.
 
-## Example
+## Simple Example
 
 ```lua
 local Ero = require 'erogodic'()
@@ -43,10 +43,67 @@ script:next()
 -- Returns: nil
 ```
 
+## Attributes Example
+
+```lua
+local portraitChiito = {path = "chiito.png", width = 200, height = 400}
+local portraitYuuri  = {path = "yuuri.png",  width = 195, height = 430}
+local script = Ero(function()
+  name "Chiito"
+  portrait(portraitChiito)
+  msg "What are you doing?"
+  name "Yuuri"
+  portrait(portraitYuuri)
+  msg "I'm taking it."
+  msg "This is war."
+end)
+  :defineAttributes({
+    'name',
+    'portrait',
+  })
+
+script:next()
+-- {msg = "What are you doing?",
+--  name = "Chiito",
+--  portrait = {path = "chiito.png", width = 200, height = 400}}
+script:next()
+-- {msg = "I'm taking it.",
+--  name = "Yuuri",
+--  portrait = {path = "yuuri.png",  width = 195, height = 430}}
+script:next()
+-- {msg = "This is war.",
+--  name = "Yuuri",
+--  portrait = {path = "yuuri.png",  width = 195, height = 430}}
+```
+
+## Macro example
+
+Macros can be used to set serveral attributes at once, here's how the previous example could be rewritten:
+
+```lua
+local portraitChiito = {path = "chiito.png", width = 200, height = 400}
+local portraitYuuri  = {path = "yuuri.png",  width = 195, height = 430}
+local script = Ero(function()
+  chii "What are you doing?"
+  yuu "I'm taking it."
+  yuu "This is war."
+end)
+  :defineAttributes({
+    'name',
+    'portrait',
+  })
+  :addMacro('chii', {
+    name = "Chiito",
+    portrait = portraitChiito,
+  })
+  :addMacro('yuu', {
+    name = "Yuuri",
+    portrait = portraitYuuri,
+  })
+```
+
 ## Eventual Features (???)
 * Less repetitive syntax. Probably via a custom language parser.
-* Add abritary node contents: text, portraits, animations, callbacks, etc.
-* Macros suitable for changing multiple attributes at once. ie. Setting the current speaking character.
 * Support for internationalization.
 * Command line script validation tool.
 
