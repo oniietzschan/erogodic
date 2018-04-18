@@ -141,7 +141,7 @@ script:next()
 --  options = {"Delicious Baklava", "Loyal Hamster"},
 --  name = "Shopkeeper"}
 script:select("Delicious Baklava")
--- {msg = You got the Hamster!",
+-- {msg = You got the Baklava!",
 --  name = ""}
 script:next()
 -- {msg = "Also, take this powerful weapon!",
