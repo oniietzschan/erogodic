@@ -1,5 +1,5 @@
 local Erogodic = {
-  _VERSION     = 'erogodic v0.2.0',
+  _VERSION     = 'erogodic v1.0.0',
   _URL         = 'https://github.com/oniietzschan/erogodic',
   _DESCRIPTION = 'A library for scripting branching interactive narrative.',
   _LICENSE     = [[
@@ -27,6 +27,8 @@ local Erogodic = {
   ]]
 }
 
+local PUSHED_SCRIPT = 'PUSHED_SCRIPT'
+
 local function assertType(obj, expectedType, name)
   assert(type(expectedType) == 'string' and type(name) == 'string')
   if type(obj) ~= expectedType then
@@ -52,12 +54,18 @@ function Script:initialize(scriptFn)
   self._selection = nil
   self._options = {}
   self._onMenu = false
-  self:_setScriptCoroutine(scriptFn)
+  self._scriptStack = {}
+  self._argsStack = {}
+  self:_initEnvironment()
+  self:_pushScript(scriptFn)
   return self
 end
 
-function Script:_setScriptCoroutine(scriptFn)
+function Script:_initEnvironment()
   local env = setmetatable({}, {__index = _G})
+  function env.get(attribute)
+    return self._attributes[attribute]
+  end
   function env.menu(text)
     self._onMenu = true
     self:_yield({
@@ -78,8 +86,23 @@ function Script:_setScriptCoroutine(scriptFn)
     table.insert(self._options, option)
   end
   self._env = env
+end
+
+function Script:_pushScript(scriptFn, ...)
   setfenv(scriptFn, self._env)
-  self._scriptCoroutine = coroutine.create(scriptFn)
+  local scriptCoroutine = coroutine.create(scriptFn, ...)
+  self._currentScript = scriptCoroutine
+  self._currentArgs = {...}
+  table.insert(self._scriptStack, scriptCoroutine)
+  table.insert(self._argsStack, self._currentArgs)
+end
+
+function Script:_popScript()
+  table.remove(self._scriptStack)
+  table.remove(self._currentArgs)
+  local len = #self._scriptStack
+  self._currentScript = (len >= 1) and self._scriptStack[len] or nil
+  self._currentArgs   = (len >= 1) and self._argsStack[len]   or nil
 end
 
 function Script:_yield(node)
@@ -89,8 +112,8 @@ function Script:_yield(node)
   coroutine.yield(node)
 end
 
-function Script:addMacro(name, attributes)
-  assertType(name, 'string', 'macro name')
+function Script:addPreset(name, attributes)
+  assertType(name, 'string', 'preset name')
   assertType(attributes, 'table', 'attributes')
   self._env[name] = function(text)
     for k, v in pairs(attributes) do
@@ -99,6 +122,16 @@ function Script:addMacro(name, attributes)
     if text then
       self._env.msg(text)
     end
+  end
+  return self
+end
+
+function Script:addMacro(name, fn)
+  assertType(name, 'string', 'macro name')
+  assertType(fn, 'function', 'macro function')
+  self._env[name] = function(...)
+    self:_pushScript(fn, ...)
+    coroutine.yield(PUSHED_SCRIPT)
   end
   return self
 end
@@ -138,18 +171,27 @@ function Script:next()
   if self._onMenu then
     return self._currentNode -- Can not skip a question.
   end
-  local isRunning
-  isRunning, self._currentNode = coroutine.resume(self._scriptCoroutine)
-  if isRunning == true then
-    return self._currentNode
-  else
-    error('Error executing script: ' .. self._currentNode)
+  local isRunning, result = coroutine.resume(self._currentScript, unpack(self._currentArgs))
+  if result == PUSHED_SCRIPT then
+    return self:next()
+  elseif isRunning == false then
+    error('Error executing script: ' .. tostring(result))
   end
+
+  self._currentNode = result
+
+  if self:hasNext() == false then
+    self:_popScript()
+    if self._currentScript ~= nil then
+      return self:next()
+    end
+  end
+
+  return self._currentNode
 end
 
 function Script:hasNext()
-  local status = coroutine.status(self._scriptCoroutine)
-  return status == 'suspended'
+  return self._currentScript ~= nil and coroutine.status(self._currentScript) == 'suspended'
 end
 
 local ErogodicMetaTable = {

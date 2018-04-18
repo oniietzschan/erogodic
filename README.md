@@ -76,9 +76,9 @@ script:next()
 --  portrait = {path = "yuuri.png",  width = 195, height = 430}}
 ```
 
-## Macro example
+## Preset example
 
-Macros can be used to set serveral attributes at once, here's how the previous example could be rewritten:
+Presets can be used to set serveral attributes at once, here's how the previous example could be rewritten:
 
 ```lua
 local portraitChiito = {path = "chiito.png", width = 200, height = 400}
@@ -92,14 +92,66 @@ end)
     'name',
     'portrait',
   })
-  :addMacro('chii', {
+  :addPreset('chii', {
     name = "Chiito",
     portrait = portraitChiito,
   })
-  :addMacro('yuu', {
+  :addPreset('yuu', {
     name = "Yuuri",
     portrait = portraitYuuri,
   })
+```
+
+## Macro example
+
+Macros can be used to create a reusable script template. This can be useful when you want to standardize and cut out repetition for something that happens at multiple times throughout your game. Some examples of how you might use this are: giving your player an item, healing the player's party by a certain amount of hit points, etc.
+
+```lua
+local script = Ero(function()
+  name "Shopkeeper"
+  msg "Thank you for rescuing my beloved tomboyish daughter!"
+  option "Delicious Baklava"
+  option "Loyal Hamster"
+  menu "Select your reward"
+  if selection() == "Delicious Baklava" then
+    giveItem("Baklava")
+  elseif selection() == "Loyal Hamster" then
+    giveItem("Hamster")
+  end
+  msg "Also, take this powerful weapon!"
+  giveItem("Slightly-Rusted Dwarfbane +3")
+  msg "Farewell!"
+end)
+  :defineAttributes({
+    'name',
+  })
+  :addMacro('giveItem', function(item)
+    local lastName = get('name')
+    name ""
+    msg("You got the " .. item .. "!")
+    name(lastName)
+    player:giveItem(item, 1) -- This is an example, your code goes here.
+  end)
+
+script:next()
+-- {msg = "Thank you for rescuing my beloved tomboyish daughter!",
+--  name = "Shopkeeper"}
+script:next()
+-- {msg = "Select your reward",
+--  options = {"Delicious Baklava", "Loyal Hamster"},
+--  name = "Shopkeeper"}
+script:select("Delicious Baklava")
+-- {msg = You got the Hamster!",
+--  name = ""}
+script:next()
+-- {msg = "Also, take this powerful weapon!",
+--  name = "Shopkeeper"}
+script:next()
+-- {msg = "Slightly-Rusted Dwarfbane +3",
+--  name = ""}
+script:next()
+-- {msg = "Farewell!",
+--  name = "Shopkeeper"}
 ```
 
 ## Eventual Features (???)

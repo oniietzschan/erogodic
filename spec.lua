@@ -229,6 +229,20 @@ describe('Terebi:', function()
       }, script:next())
     end)
 
+    it('Should be able to get() node value', function()
+      local script = Ero(function()
+        name "Steve Brule"
+        local charaName = get('name')
+        msg("Hello, my name is Dr. " .. charaName .. ".")
+      end)
+        :defineAttributes({'name'})
+
+      assert.same({
+        name = "Steve Brule",
+        msg = "Hello, my name is Dr. Steve Brule.",
+      }, script:next())
+    end)
+
     it('should be able to set node attributes to any Lua value', function()
       local func = function() return false end
       local tbl = {path = "/assets/portrait.png", width = 64, height = 128}
@@ -270,7 +284,7 @@ describe('Terebi:', function()
       }, script:next())
     end)
 
-    it('should be able to use macros to create message node with multiple attribute values', function()
+    it('should be able to use presets to create message node with multiple attribute values', function()
       local script = Ero(function()
 
         -- terse syntax
@@ -288,11 +302,11 @@ describe('Terebi:', function()
           'name',
           'image',
         })
-        :addMacro('kaban', {
+        :addPreset('kaban', {
           name = 'Kaban',
           image = 'kaban.png',
         })
-        :addMacro('serval', {
+        :addPreset('serval', {
           name = 'Serval, The Serval',
           image = 'serval.png',
         })
@@ -319,6 +333,77 @@ describe('Terebi:', function()
         font = 'jokerman',
         msg = 'Ureshii naa!',
       }, script:next())
+    end)
+  end)
+
+  describe('When using macros', function()
+    it('Should be able to use macros', function()
+      local script = Ero(function()
+        msg "Starting Main Script"
+        myMacro("First")
+        myMacro("Second")
+        msg "Ending Main Script"
+      end)
+        :addMacro('myMacro', function(val)
+          msg("Inside myMacro with value: " .. val)
+        end)
+
+      assert.same({
+        msg = "Starting Main Script",
+      }, script:next())
+      assert.same({
+        msg = "Inside myMacro with value: First",
+      }, script:next())
+      assert.same({
+        msg = "Inside myMacro with value: Second",
+      }, script:next())
+      assert.same({
+        msg = "Ending Main Script",
+      }, script:next())
+      assert.same(nil, script:next())
+      assert.same(false, script:hasNext())
+    end)
+
+    it('Should be able to use macros inside macros', function()
+      local script = Ero(function()
+        msg "Starting Main Script"
+        myMacro(
+          "has hairy legs.",
+          "prefers dubs over subs."
+        )
+        msg "Ending Main Script"
+      end)
+        :addMacro('myMacro', function(...)
+          msg("Macro started")
+          for _, val in ipairs({...}) do
+            mySubmacro(val)
+          end
+          msg("Macro ended")
+        end)
+        :addMacro('mySubmacro', function(val)
+          msg("We need a Disney princess who " .. val)
+        end)
+
+      assert.same({
+        msg = "Starting Main Script",
+      }, script:next())
+      assert.same({
+        msg = "Macro started",
+      }, script:next())
+      assert.same({
+        msg = "We need a Disney princess who has hairy legs.",
+      }, script:next())
+      assert.same({
+        msg = "We need a Disney princess who prefers dubs over subs.",
+      }, script:next())
+      assert.same({
+        msg = "Macro ended",
+      }, script:next())
+      assert.same({
+        msg = "Ending Main Script",
+      }, script:next())
+      assert.same(nil, script:next())
+      assert.same(false, script:hasNext())
     end)
   end)
 
