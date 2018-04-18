@@ -147,7 +147,7 @@ script:next()
 -- {msg = "Also, take this powerful weapon!",
 --  name = "Shopkeeper"}
 script:next()
--- {msg = "Slightly-Rusted Dwarfbane +3",
+-- {msg = "You got the Slightly-Rusted Dwarfbane +3!",
 --  name = ""}
 script:next()
 -- {msg = "Farewell!",
