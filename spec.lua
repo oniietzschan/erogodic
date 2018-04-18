@@ -229,6 +229,12 @@ describe('Terebi:', function()
       }, script:next())
     end)
 
+    it('Should throw error when defineAttributes() is called with invalid parameters.', function()
+      local script = Ero(function() end)
+      local expectedError = "attributeNames must be a table, got: nil"
+      assert.has_error(function() script:defineAttributes(nil) end, expectedError)
+    end)
+
     it('Should be able to get() node value', function()
       local script = Ero(function()
         name "Steve Brule"
