@@ -22,9 +22,9 @@ local script = Ero(function()
   option "Soft Serve"
   option "Shaved Ice"
   menu "Choose one:"
-  if selection() == "Soft Serve" then
+  if selection "Soft Serve" then
     msg "Too cold!!"
-  elseif selection() == "Shaved Ice" then
+  elseif selection "Shaved Ice" then
     msg "Just right."
   end
   msg "Thanks for stopping by!"
@@ -44,6 +44,8 @@ script:next()
 ```
 
 ## Attributes Example
+
+Attributes are arbitrary properties which will be turned alongside `msg`. They can be set to any Lua value. Attributes might be suitable for messagebox titles, character portraits, text effects, or anything else you can imagine. You just gotta keep believing and never give up on your dreams!
 
 ```lua
 local portraitChiito = {path = "chiito.png", width = 200, height = 400}
@@ -113,9 +115,9 @@ local script = Ero(function()
   option "Delicious Baklava"
   option "Loyal Hamster"
   menu "Select your reward"
-  if selection() == "Delicious Baklava" then
+  if selection "Delicious Baklava" then
     giveItem("Baklava")
-  elseif selection() == "Loyal Hamster" then
+  elseif selection "Loyal Hamster" then
     giveItem("Hamster")
   end
   msg "Also, take this powerful weapon!"
@@ -154,10 +156,20 @@ script:next()
 --  name = "Shopkeeper"}
 ```
 
-## Eventual Features (???)
-* Less repetitive syntax. Probably via a custom language parser.
-* Support for internationalization.
-* Command line script validation tool.
+## Tips and Tricks
+
+To eliminate duplication in your scripts, you can take advantage of the fact that `option` returns the value that was passed into it:
+
+```lua
+local breadsticks  = option "Conjure Lesser Breadsticks"
+local seaCreatures = option "Converse With Sea Creatures"
+menu "Which powerful spell should I teach you?"
+if selection(breadsticks) then
+  msg "A fine choice."
+elseif selection(seaCreatures) then
+  msg "Interested in the dark arts, are we?"
+end
+```
 
 ##  ┐(￣ヘ￣;)┌
 

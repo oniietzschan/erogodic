@@ -25,9 +25,9 @@ describe('Terebi:', function()
         option "Soft Serve"
         option "Shaved Ice"
         menu "Choose one:"
-        if selection() == "Soft Serve" then
+        if selection "Soft Serve" then
           msg "Too cold!!"
-        elseif selection() == "Shaved Ice" then
+        elseif selection "Shaved Ice" then
           msg "Just right."
         end
       end)
@@ -54,18 +54,18 @@ describe('Terebi:', function()
       assert.same(false, script:hasNext())
     end)
 
-    it('Looping should be possible', function()
+    it('Looping should be possible. Also test option returning things I guess.', function()
       local script = Ero(function()
         while true do
-          option "What does a wanko say?"
-          option "What does a nyanko say?"
-          option "I already know a ton about animal sounds."
+          local wanko       = option "What does a wanko say?"
+          local nyanko      = option "What does a nyanko say?"
+          local alreadyKnow = option "I already know a ton about animal sounds."
           menu "Make your selection, now."
-          if selection() == "What does a wanko say?" then
+          if selection(wanko) then
             msg "Wan! Wan!"
-          elseif selection() == "What does a nyanko say?" then
+          elseif selection(nyanko) then
             msg "Nya! Nyan!"
-          elseif selection() == "I already know a ton about animal sounds." then
+          elseif selection(alreadyKnow) then
             msg "Fine. Have a nice day."
             break
           end
@@ -111,10 +111,10 @@ describe('Terebi:', function()
           end
           option "Give the world it's retribution."
           menu ""
-          if selection() == "Put on a dapper hat." then
+          if selection "Put on a dapper hat." then
             player.hatted = true
             msg "You put on a dapper hat. It fits perfectly and you look fucking brilliant."
-          elseif selection() == "Say: \"I am the supreme gentleman.\"" then
+          elseif selection "Say: \"I am the supreme gentleman.\"" then
             msg "You assert your status as a conscious agent in the universe."
             break
           end
@@ -163,7 +163,7 @@ describe('Terebi:', function()
       local script = Ero(function()
         option "Yes"
         menu "Would you like to pay your taxes?"
-        if selection() == "Yes" then
+        if selection "Yes" then
           msg "What a good citizen you are!"
         end
       end)

@@ -1,5 +1,5 @@
 local Erogodic = {
-  _VERSION     = 'erogodic v1.0.0',
+  _VERSION     = 'erogodic v2.0.0',
   _URL         = 'https://github.com/oniietzschan/erogodic',
   _DESCRIPTION = 'A library for scripting branching interactive narrative.',
   _LICENSE     = [[
@@ -76,14 +76,13 @@ function Script:_initEnvironment()
   function env.msg(text)
     self:_yield({msg = text})
   end
-  env.selection = setmetatable({}, {
-    __call = function()
-      return self._selection
-    end,
-  })
+  function env.selection(option)
+    return self._selection == option
+  end
   function env.option(option)
     assertType(option, 'string', 'option')
     table.insert(self._options, option)
+    return option
   end
   self._env = env
 end
