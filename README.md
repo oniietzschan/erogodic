@@ -11,7 +11,7 @@ Erogodic is a library for scripting branching interactive narrative in Lua. It a
 
 Erogodic aims to provide the "back-end" of a dialog system. You will need to implement your own message boxes, portraits, user-interaction, etc. For maximum flexibility, erogodic allows you to attach any amount of arbitrary data to each "message node".
 
-Right now Lua 5.1, Luajit 2.0, and Luajit 2.1 are supported.
+Erogodic's scripts are written as pure Lua coroutines; this has a couple major benefits. Firstly, it should be extremely easy to trigger any of your game's functionalities depending on which dialogue options are chosen. Secondly, your scripts themselves can be highly dynamic: messages, choices, and more can be modified in real time in accordance to the status of your game world.
 
 ## Simple Example
 
