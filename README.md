@@ -3,16 +3,15 @@
 [![Build Status](https://travis-ci.org/oniietzschan/erogodic.svg?branch=master)](https://travis-ci.org/oniietzschan/erogodic)
 [![Codecov](https://codecov.io/gh/oniietzschan/erogodic/branch/master/graph/badge.svg)](https://codecov.io/gh/oniietzschan/erogodic)
 [![Alex](https://img.shields.io/badge/alex-never_racist-brightgreen.svg)](http://alexjs.com/)
-
-![Example GIF](https://i.imgur.com/AjDqNCO.gif)
+![Lua](https://img.shields.io/badge/Lua-JIT%2C%205.1-blue.svg)
 
 Erogodic is a library for scripting branching interactive narrative in Lua. It aims to be suitable for any sort of game which needs some amount of dialogue or narration, including games which are comprised entirely out of dialog, like visual novels.
+
+![Example GIF](https://i.imgur.com/AjDqNCO.gif)
 
 Erogodic aims to provide the "back-end" of a dialog system. You will need to implement your own message boxes, portraits, user-interaction, etc. For maximum flexibility, erogodic allows you to attach any amount of arbitrary data to each "message node".
 
 Right now Lua 5.1, Luajit 2.0, and Luajit 2.1 are supported.
-
-I currently do not consider this library to be ideal. The syntax is too verbose, particularily around the menu functionality. I will probably rewrite Erogodic as a custom scripting language at a future time.
 
 ## Simple Example
 
