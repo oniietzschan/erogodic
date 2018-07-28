@@ -1,5 +1,5 @@
 local Erogodic = {
-  _VERSION     = 'erogodic v2.0.0',
+  _VERSION     = 'erogodic v2.0.1',
   _URL         = 'https://github.com/oniietzschan/erogodic',
   _DESCRIPTION = 'A library for scripting branching interactive narrative.',
   _LICENSE     = [[
@@ -163,10 +163,13 @@ function Script:select(selection)
       return self:next()
     end
   end
-  error("selection '" .. selection .. "' was not one of the options.")
+  error("Selection '" .. selection .. "' was not one of the options.")
 end
 
 function Script:next()
+  if self:hasNext() == false then
+    error('Script is finished.')
+  end
   if self._onMenu then
     return self._currentNode -- Can not skip a question.
   end

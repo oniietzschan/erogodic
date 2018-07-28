@@ -10,11 +10,12 @@ describe('Terebi:', function()
   end)
 
   describe('When executing script', function()
+    -- !! This test case is first because the expected error references the line number in this file. !!
     it('Invalid scripts should relay error message', function()
       local script = Ero(function()
         msg(undefinedGlobal.undefinedKey)
       end)
-      local expectedError = "Error executing script: spec.lua:15: attempt to index global 'undefinedGlobal' (a nil value)"
+      local expectedError = "Error executing script: spec.lua:16: attempt to index global 'undefinedGlobal' (a nil value)"
       assert.has_error(function() script:next() end, expectedError)
     end)
 
@@ -145,6 +146,19 @@ describe('Terebi:', function()
       }, script:select("Say: \"I am the supreme gentleman.\""))
       assert.same(nil, script:next())
     end)
+
+    it('Calling :next() on a finished script should give a vaguely coherent error message.', function()
+      local script = Ero(function()
+        msg "あ、そういえばアイポンってツリあるよね、ツリ～"
+      end)
+      assert.same({
+        msg = "あ、そういえばアイポンってツリあるよね、ツリ～",
+      }, script:next())
+      assert.same(nil, script:next())
+      assert.same(false, script:hasNext())
+      local expectedError = "Script is finished."
+      assert.has_error(function() script:next() end, expectedError)
+    end)
   end)
 
   describe('When prompted with a choice', function()
@@ -156,7 +170,7 @@ describe('Terebi:', function()
       end)
 
       assert.same({msg = "Which is best?", options = {"Lemon Tea", "Milk Tea"}}, script:next())
-      assert.has_error(function() script:select("Onion Tea") end, "selection 'Onion Tea' was not one of the options.")
+      assert.has_error(function() script:select("Onion Tea") end, "Selection 'Onion Tea' was not one of the options.")
     end)
 
     it('Should not be possible to skip it', function()
