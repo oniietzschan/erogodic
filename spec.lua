@@ -93,6 +93,23 @@ describe('Terebi:', function()
       assert.same(nil, script:next())
     end)
 
+    it('selection() should return last selected value when invoked with no argument', function()
+      local testVariable = 'CHANGE ME'
+      local script = Ero(function()
+        option "Wanko"
+        option "Nyanko"
+        menu ""
+        testVariable = selection()
+      end)
+
+      assert.same({
+        msg = "",
+        options = {"Wanko", "Nyanko"}
+      }, script:next())
+      assert.same(nil, script:select("Wanko"))
+      assert.same("Wanko", testVariable)
+    end)
+
     it("Arbitrary lua scripting should be possible", function()
       local player = {
         hatted = false,

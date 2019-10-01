@@ -70,13 +70,15 @@ function Script:_initEnvironment()
   function env.msg(text)
     self:_yield({msg = text})
   end
-  function env.selection(option)
-    return self._selection == option
-  end
   function env.option(option)
     assertType(option, 'string', 'option')
     table.insert(self._options, option)
     return option
+  end
+  function env.selection(option)
+    return (option == nil)
+      and self._selection
+      or self._selection == option
   end
   self._env = env
 end
