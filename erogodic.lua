@@ -1,33 +1,34 @@
-local Erogodic = {
-  _VERSION     = 'erogodic v2.0.1',
-  _URL         = 'https://github.com/oniietzschan/erogodic',
-  _DESCRIPTION = 'A library for scripting branching interactive narrative.',
-  _LICENSE     = [[
-    Massachusecchu... あれっ！ Massachu... chu... chu... License!
+--[[
 
-    Copyright (c) 1789 shru
+erogodic v3.0.0
+===============
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+A library for scripting branching interactive narrative by shru.
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+https://github.com/oniietzschan/erogodic
 
-    THE SOFTWARE IS PROVIDED 【AS IZ】, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE. PLEASE HAVE A FUN AND BE GENTLE WITH THIS SOFTWARE.
-  ]]
-}
+Massachusecchu... あれっ！ Massachu... chu... chu... License!
+-----------------------------------------------------------
 
-local PUSHED_SCRIPT = 'PUSHED_SCRIPT'
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 【AS IZ】, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. PLEASE HAVE A FUN AND BE GENTLE WITH THIS SOFTWARE.
+
+--]]
 
 local function assertType(obj, expectedType, name)
   assert(type(expectedType) == 'string' and type(name) == 'string')
@@ -36,19 +37,12 @@ local function assertType(obj, expectedType, name)
   end
 end
 
+local PUSHED_SCRIPT = 'PUSHED_SCRIPT'
+
 local Script = {}
 local ScriptMetaTable = {__index = Script}
 
-function Erogodic:__call(...)
-  return self:newScript(...)
-end
-
-function Erogodic:newScript(...)
-  return setmetatable({}, ScriptMetaTable)
-    :initialize(...)
-end
-
-function Script:initialize(scriptFn)
+function Script:new(scriptFn)
   assertType(scriptFn, 'function', 'script function')
   self._attributes = {}
   self._selection = nil
@@ -109,20 +103,6 @@ function Script:_yield(node)
     node[k] = v
   end
   coroutine.yield(node)
-end
-
-function Script:addPreset(name, attributes)
-  assertType(name, 'string', 'preset name')
-  assertType(attributes, 'table', 'attributes')
-  self._env[name] = function(text)
-    for k, v in pairs(attributes) do
-      self._attributes[k] = v
-    end
-    if text then
-      self._env.msg(text)
-    end
-  end
-  return self
 end
 
 function Script:addMacro(name, fn)
@@ -196,9 +176,7 @@ function Script:hasNext()
   return self._currentScript ~= nil and coroutine.status(self._currentScript) == 'suspended'
 end
 
-local ErogodicMetaTable = {
-  __index = Erogodic,
-  __call = Erogodic.__call,
-}
-
-return function() return setmetatable({}, ErogodicMetaTable) end
+return function(...)
+  return setmetatable({}, ScriptMetaTable)
+    :new(...)
+end

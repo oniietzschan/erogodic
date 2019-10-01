@@ -1,21 +1,15 @@
 require 'busted'
 
-local ErogodicModule = require 'erogodic'
+local Ero = require 'erogodic'
 
 describe('Terebi:', function()
-  local Ero
-
-  before_each(function()
-    Ero = ErogodicModule()
-  end)
-
   describe('When executing script', function()
     -- !! This test case is first because the expected error references the line number in this file. !!
     it('Invalid scripts should relay error message', function()
       local script = Ero(function()
         msg(undefinedGlobal.undefinedKey)
       end)
-      local expectedError = "Error executing script: spec.lua:16: attempt to index global 'undefinedGlobal' (a nil value)"
+      local expectedError = "Error executing script: spec.lua:10: attempt to index global 'undefinedGlobal' (a nil value)"
       assert.has_error(function() script:next() end, expectedError)
     end)
 
@@ -303,33 +297,32 @@ describe('Terebi:', function()
         msg = "table",
       }, script:next())
     end)
+  end)
 
-    it('should be able to use presets to create message node with multiple attribute values', function()
+  describe('When using macros', function()
+    it('Should be able to use macros', function()
       local script = Ero(function()
-
-        -- terse syntax
-        serval()
-        msg "Ohayou!"
+        serval "Ohayou!"
         kaban "Tabenai de kudasai!"
-        font "jokerman"
         serval "Tabenai yo!"
-        -- verbose syntax
-        kaban()
-        msg "Ureshii naa!"
+        font "jokerman"
+        kaban "Ureshii naa!"
       end)
         :defineAttributes({
           'font',
           'name',
           'image',
         })
-        :addPreset('kaban', {
-          name = 'Kaban',
-          image = 'kaban.png',
-        })
-        :addPreset('serval', {
-          name = 'Serval, The Serval',
-          image = 'serval.png',
-        })
+        :addMacro('kaban', function(text)
+          name 'Kaban'
+          image 'kaban.png'
+          msg(text)
+        end)
+        :addMacro('serval', function(text)
+          name 'Serval, The Serval'
+          image 'serval.png'
+          msg(text)
+        end)
 
       assert.same({
         name = 'Serval, The Serval',
@@ -344,7 +337,6 @@ describe('Terebi:', function()
       assert.same({
         name = 'Serval, The Serval',
         image = 'serval.png',
-        font = 'jokerman',
         msg = 'Tabenai yo!',
       }, script:next())
       assert.same({
@@ -353,35 +345,6 @@ describe('Terebi:', function()
         font = 'jokerman',
         msg = 'Ureshii naa!',
       }, script:next())
-    end)
-  end)
-
-  describe('When using macros', function()
-    it('Should be able to use macros', function()
-      local script = Ero(function()
-        msg "Starting Main Script"
-        myMacro("First")
-        myMacro("Second")
-        msg "Ending Main Script"
-      end)
-        :addMacro('myMacro', function(val)
-          msg("Inside myMacro with value: " .. val)
-        end)
-
-      assert.same({
-        msg = "Starting Main Script",
-      }, script:next())
-      assert.same({
-        msg = "Inside myMacro with value: First",
-      }, script:next())
-      assert.same({
-        msg = "Inside myMacro with value: Second",
-      }, script:next())
-      assert.same({
-        msg = "Ending Main Script",
-      }, script:next())
-      assert.same(nil, script:next())
-      assert.same(false, script:hasNext())
     end)
 
     it('Should be able to use macros inside macros', function()

@@ -79,9 +79,9 @@ script:next()
 --  portrait = {path = "yuuri.png",  width = 195, height = 430}}
 ```
 
-## Preset example
+## Macro example
 
-Presets can be used to set serveral attributes at once, here's how the previous example could be rewritten:
+Macros can be used to create a reusable script template. This can really cut down on repetition and make your scripts more terse and readable.
 
 ```lua
 local portraitChiito = {path = "chiito.png", width = 200, height = 400}
@@ -95,23 +95,27 @@ end)
     'name',
     'portrait',
   })
-  :addPreset('chii', {
-    name = "Chiito",
-    portrait = portraitChiito,
-  })
-  :addPreset('yuu', {
-    name = "Yuuri",
-    portrait = portraitYuuri,
-  })
+  :addMacro('chii', function(text)
+    name "Chiito"
+    portrait(portraitChiito)
+    msg(text)
+  end)
+  :addMacro('yuu', function(text)
+    name "Yuuri"
+    portrait(portraitYuuri)
+    msg(text)
+  end)
 ```
 
-## Macro example
-
-Macros can be used to create a reusable script template. This can be useful when you want to standardize and cut out repetition for something that happens at multiple times throughout your game. Some examples of how you might use this are: giving your player an item, healing the player's party by a certain amount of hit points, etc.
+## Advanced Example
 
 ```lua
 local script = Ero(function()
   name "Shopkeeper"
+  if not game:isFlagSet('DAUGHTER_RESCUED') then -- This is an example, your code goes here.
+    msg "Please rescue my beloved tomboyish daughter!"
+    return
+  end
   msg "Thank you for rescuing my beloved tomboyish daughter!"
   option "Delicious Baklava"
   option "Loyal Hamster"
@@ -121,8 +125,6 @@ local script = Ero(function()
   elseif selection "Loyal Hamster" then
     giveItem("Hamster")
   end
-  msg "Also, take this powerful weapon!"
-  giveItem("Slightly-Rusted Dwarfbane +3")
   msg "Farewell!"
 end)
   :defineAttributes({
@@ -145,12 +147,6 @@ script:next()
 --  name = "Shopkeeper"}
 script:select("Delicious Baklava")
 -- {msg = You got the Baklava!",
---  name = ""}
-script:next()
--- {msg = "Also, take this powerful weapon!",
---  name = "Shopkeeper"}
-script:next()
--- {msg = "You got the Slightly-Rusted Dwarfbane +3!",
 --  name = ""}
 script:next()
 -- {msg = "Farewell!",
