@@ -9,7 +9,7 @@ local script = Ero(function()
   menu "Select your reward"
   if selection(baklava) then
     giveItem("Baklava")
-  elseif selection "Loyal Hamster" then
+  elseif selection(hamster) then
     giveItem("Hamster")
   end
   msg "Also, take this powerful weapon!"
