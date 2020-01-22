@@ -13,6 +13,10 @@ Erogodic aims to provide the "back-end" of a dialog system. You will need to imp
 
 Erogodic's scripts are written as pure Lua coroutines; this has a couple major benefits. Firstly, it should be extremely easy to trigger any of your game's functionalities depending on which dialogue options are chosen. Secondly, your scripts themselves can be highly dynamic: messages, choices, and more can be modified in real time in accordance to the status of your game world.
 
+## Demo
+
+If you're a [LÖVE](https://love2d.org/) user, then check out `main.lua`. It's a simple demonstration of how you can use Erogodic. This demo makes use of [Talkies](https://github.com/tanema/talkies) in order to provide a message box. You could use Talkies yourself, or you could write your own messsage box.
+
 ## Simple Example
 
 ```lua

@@ -1,5 +1,3 @@
-io.stdout:setvbuf("no")
-
 local Ero = require 'erogodic'
 local script = Ero(function()
   name "Shopkeeper"
@@ -28,6 +26,8 @@ end)
 
 local Talkies = require 'demo.talkies'
 Talkies.backgroundColor = {1, 1, 1, 0.2}
+Talkies.textSpeed = 'medium'
+Talkies.font = love.graphics.newFont(24)
 
 local displayMessageNode
 
@@ -42,12 +42,11 @@ local function selectOption(selection)
 end
 
 displayMessageNode = function(node)
-  local config = {}
-
   if node == nil then
     return -- Erogodic script is over.
   end
 
+  local config = {}
   if node.options then
     config.options = {}
     for i, opt in ipairs(node.options) do
