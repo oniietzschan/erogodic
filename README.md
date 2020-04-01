@@ -50,7 +50,7 @@ script:next()
 
 ## Attributes Example
 
-Attributes are arbitrary properties which will be turned alongside `msg`. They can be set to any Lua value. Attributes might be suitable for messagebox titles, character portraits, text effects, or anything else you can imagine. You just gotta keep believing and never give up on your dreams!
+Attributes are arbitrary properties which will be returned alongside `msg`. They can be set to any Lua value. Attributes might be suitable for messagebox titles, character portraits, text effects, or anything else you can imagine. You just gotta keep believing and never give up on your dreams!
 
 ```lua
 local portraitChiito = {path = "chiito.png", width = 200, height = 400}
