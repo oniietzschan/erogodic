@@ -2,8 +2,9 @@
 
 [![Build Status](https://travis-ci.org/oniietzschan/erogodic.svg?branch=master)](https://travis-ci.org/oniietzschan/erogodic)
 [![Codecov](https://codecov.io/gh/oniietzschan/erogodic/branch/master/graph/badge.svg)](https://codecov.io/gh/oniietzschan/erogodic)
-[![Alex](https://img.shields.io/badge/alex-never_racist-brightgreen.svg)](http://alexjs.com/)
 ![Lua](https://img.shields.io/badge/Lua-JIT%2C%205.1-blue.svg)
+![Public Domain](https://img.shields.io/badge/license-public%20domain-blue)
+[![Alex](https://img.shields.io/badge/alex-never_racist-brightgreen.svg)](http://alexjs.com/)
 
 Erogodic is a library for scripting branching interactive narrative in Lua. It aims to be suitable for any sort of game which needs some amount of dialogue or narration, including games which are comprised entirely out of dialog, like visual novels.
 

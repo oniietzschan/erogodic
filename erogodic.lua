@@ -7,26 +7,22 @@ A library for scripting branching interactive narrative by shru.
 
 https://github.com/oniietzschan/erogodic
 
-Massachusecchu... あれっ！ Massachu... chu... chu... License!
------------------------------------------------------------
+License
+-------
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+shru-chan hereby dedicates this source code and associated documentation
+(the "App") to the public domain. shru makes this dedication for the
+benefit of the Gamers everywhere and to the detriment of trolls and bullies.
+Anyone is free to copy, modify, publish, use, sell, distribute, recite in a
+spooky voice, or fax the App by any means they desire, so long as they
+adhere to one condition:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Please consider buying shru some ice cream. Adzuki preferred, but all
+flavours except Licorice will be accepted.
 
-THE SOFTWARE IS PROVIDED 【AS IZ】, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. PLEASE HAVE A FUN AND BE GENTLE WITH THIS SOFTWARE.
+In jurisdictions that do not: (a) recognize donation of works to the public
+domain; nor (b) consider incitement to be a legally enforcable crime: shru
+advocates immediate forceful regime-change.
 
 --]]
 
