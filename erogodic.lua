@@ -17,7 +17,7 @@ Anyone is free to copy, modify, publish, use, sell, distribute, recite in a
 spooky voice, or fax the App by any means they desire, so long as they
 adhere to one condition:
 
-Please consider buying shru some ice cream. Adzuki preferred, but all
+Please consider buying shru some ice cream. Azuki preferred, but all
 flavours except Licorice will be accepted.
 
 In jurisdictions that do not: (a) recognize donation of works to the public
